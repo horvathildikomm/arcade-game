@@ -1,3 +1,4 @@
+'use strict'
 // This function converts block position to canvas pixels
 const coordinatesToPixel = (x,y) => [x*101  + 0.5, y*83 -15];
 // This function converts canvas pixels to block position
@@ -18,7 +19,7 @@ Enemy.prototype.restart = function (){
   this.speed = Math.random()*250 + 50;
   // Every enemy starts from -1st x block position
   // and between 1st and 3rd y block position
-  const [x,y] = coordinatesToPixel(-1, 1+ Math.floor(Math.random()*3))
+  const [x,y] = coordinatesToPixel(-1, 1+ Math.floor(Math.random()*3));
   // Enemy coordinates are stored in pixels!
   this.x = x;
   this.y = y;
@@ -46,18 +47,12 @@ var Player = function(){
   this.sprite = 'images/char-boy.png';
 };
 Player.prototype.update = function() {
-  // When the player reaches the water, reset the position
-  // and add 100 to the score
-  if(!this.y){
-    this.y = 5;
-    this.score +=100;
-  };
   // Collision check: filter enemies whose position is not the same
   // as the player's.
   const filteredEnemies = allEnemies
   .filter(enemy => {
     // Calcute block coordinates for the given enemy
-    const [x,y] = pixelToCoordinates(enemy.x, enemy.y)
+    const [x,y] = pixelToCoordinates(enemy.x, enemy.y);
     // If enemy position is the same as the player position
     // then leave it in the array, otherwise drop it.
     if ((x === this.x) && (y === this.y)){
@@ -74,7 +69,7 @@ Player.prototype.update = function() {
 };
 Player.prototype.render = function() {
   // Map player's block postion to pixel coordinates
-  const [x,y] = coordinatesToPixel(this.x, this.y)
+  const [x,y] = coordinatesToPixel(this.x, this.y);
   ctx.drawImage(Resources.get(this.sprite), x, y);
   // Draw the score on the top of the game.
   ctx.font = '48px serif';
@@ -101,6 +96,12 @@ Player.prototype.handleInput = function(inputStr) {
   // Truncate player position, so it can not leave the map/canvas.
   this.x = Math.max(Math.min(this.x,4),0);
   this.y = Math.max(Math.min(this.y,5),0);
+  // When the player reaches the water, reset the position
+  // and add 100 to the score
+  if(!this.y){
+    this.y = 5;
+    this.score +=100;
+  };
 };
 
 // Create 5 new enemies
